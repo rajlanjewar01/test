@@ -1,0 +1,7 @@
+{
+	"name": "@bigdaddy/seed",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"description": "Synthetic data seed scripts (fixed seed, repeatable). Implemented in E2."
+}
