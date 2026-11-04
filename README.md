@@ -14,16 +14,20 @@ project. All data is synthetic and generated with a fixed seed.
 npm ci                # clean install of all workspaces from package-lock.json
 npm test              # run Mocha tests in every workspace
 npm run test:coverage # run tests with c8 coverage (80% lines and branches)
+npm run lint          # ESLint on every workspace, zero warnings allowed
+npm run format        # Prettier: rewrite files
+npm run format:check  # Prettier: check only
+npm run check         # lint, format check and tests
 ```
 
 ## Layout
 
-| Path | Purpose |
-|---|---|
-| `apps/web` | Vue 3 frontend (JavaScript) |
-| `apps/api` | NestJS backend (TypeScript) |
-| `packages/seed` | Synthetic data seed scripts |
+| Path              | Purpose                      |
+| ----------------- | ---------------------------- |
+| `apps/web`        | Vue 3 frontend (JavaScript)  |
+| `apps/api`        | NestJS backend (TypeScript)  |
+| `packages/seed`   | Synthetic data seed scripts  |
 | `packages/config` | Shared tooling configuration |
-| `infra` | Docker Compose and Terraform |
-| `docs` | Documentation and ADRs |
-| `.github` | Workflows and templates |
+| `infra`           | Docker Compose and Terraform |
+| `docs`            | Documentation and ADRs       |
+| `.github`         | Workflows and templates      |

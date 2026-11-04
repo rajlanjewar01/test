@@ -12,7 +12,27 @@
 		"npm": ">=10"
 	},
 	"scripts": {
+		"prepare": "husky",
 		"test": "npm run test --workspaces --if-present",
-		"test:coverage": "npm run test:coverage --workspaces --if-present"
+		"test:coverage": "npm run test:coverage --workspaces --if-present",
+		"lint": "eslint . --max-warnings 0",
+		"lint:fix": "eslint . --fix",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"check": "npm run lint && npm run format:check && npm test"
+	},
+	"devDependencies": {
+		"@bigdaddy/config": "*",
+		"@commitlint/cli": "^21.2.4",
+		"@commitlint/config-conventional": "^21.2.4",
+		"@eslint/js": "^10.0.1",
+		"eslint": "^10.14.0",
+		"eslint-config-prettier": "^10.1.8",
+		"eslint-plugin-import-x": "^4.17.1",
+		"globals": "^17.14.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^17.6.0",
+		"prettier": "^3.9.10",
+		"typescript-eslint": "^8.72.1"
 	}
 }

@@ -6,7 +6,10 @@
 	"exports": {
 		"./tsconfig.base.json": "./tsconfig.base.json",
 		"./mocharc.base.cjs": "./mocharc.base.cjs",
-		"./c8.base.json": "./c8.base.json"
+		"./c8.base.json": "./c8.base.json",
+		"./eslint.base.mjs": "./eslint.base.mjs",
+		"./prettier.base.mjs": "./prettier.base.mjs",
+		"./commitlint.base.mjs": "./commitlint.base.mjs"
 	},
 	"scripts": {
 		"test": "mocha"

@@ -1,5 +1,5 @@
 export function getAppInfo() {
-  return {
+	return {
 		name: 'bigdaddy-web',
 		defaultLocale: 'en',
 		locales: ['en', 'es', 'fr'],
