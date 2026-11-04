@@ -1,0 +1,9 @@
+{
+	"check-coverage": true,
+	"lines": 80,
+	"branches": 80,
+	"reporter": ["text", "html"],
+	"report-dir": "coverage",
+	"src": ["src"],
+	"exclude": ["test/**"]
+}

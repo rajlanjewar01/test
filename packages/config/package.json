@@ -1,0 +1,21 @@
+{
+	"name": "@bigdaddy/config",
+	"version": "0.0.0",
+	"private": true,
+	"type": "commonjs",
+	"exports": {
+		"./tsconfig.base.json": "./tsconfig.base.json",
+		"./mocharc.base.cjs": "./mocharc.base.cjs",
+		"./c8.base.json": "./c8.base.json",
+		"./eslint.base.mjs": "./eslint.base.mjs",
+		"./prettier.base.mjs": "./prettier.base.mjs",
+		"./commitlint.base.mjs": "./commitlint.base.mjs"
+	},
+	"scripts": {
+		"test": "mocha"
+	},
+	"devDependencies": {
+		"chai": "^6.3.0",
+		"mocha": "^12.0.3"
+	}
+}
