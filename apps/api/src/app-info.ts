@@ -1,3 +1,4 @@
+/* c8 ignore next 4 */
 export interface AppInfo {
 	name: string;
 	apiPrefix: string;
