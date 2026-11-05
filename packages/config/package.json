@@ -12,10 +12,12 @@
 		"./commitlint.base.mjs": "./commitlint.base.mjs"
 	},
 	"scripts": {
-		"test": "mocha"
+		"test": "mocha",
+		"test:coverage": "mocha"
 	},
 	"devDependencies": {
 		"chai": "^6.3.0",
-		"mocha": "^12.0.3"
+		"mocha": "^12.0.3",
+		"yaml": "^2.9.1"
 	}
 }

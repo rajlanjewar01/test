@@ -1,0 +1,35 @@
+openapi: 3.0.3
+info:
+  title: bigdaddy API
+  version: 0.0.0
+  description: >-
+    Heavy-equipment service information system API. This placeholder is
+    replaced by the exported document in E1-01.
+  contact:
+    name: bigdaddy maintainers
+  license:
+    name: To be decided
+servers:
+  - url: /api/v1
+tags:
+  - name: health
+    description: Service health
+paths:
+  /health:
+    get:
+      operationId: getHealth
+      tags:
+        - health
+      summary: Health check
+      description: Returns the service health status.
+      responses:
+        '200':
+          description: The service is healthy.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok

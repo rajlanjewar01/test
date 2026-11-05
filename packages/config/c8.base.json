@@ -2,7 +2,7 @@
 	"check-coverage": true,
 	"lines": 80,
 	"branches": 80,
-	"reporter": ["text", "html"],
+	"reporter": ["text", "html", "lcov"],
 	"report-dir": "coverage",
 	"src": ["src"],
 	"exclude": ["test/**"]
