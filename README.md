@@ -38,12 +38,15 @@ Check new-code coverage locally after a coverage run with
 
 ## Layout
 
-| Path              | Purpose                      |
-| ----------------- | ---------------------------- |
-| `apps/web`        | Vue 3 frontend (JavaScript)  |
-| `apps/api`        | NestJS backend (TypeScript)  |
-| `packages/seed`   | Synthetic data seed scripts  |
-| `packages/config` | Shared tooling configuration |
-| `infra`           | Docker Compose and Terraform |
-| `docs`            | Documentation and ADRs       |
-| `.github`         | Workflows and templates      |
+| Path              | Purpose                                |
+| ----------------- | -------------------------------------- |
+| `apps/web`        | Vue 3 frontend (JavaScript)            |
+| `apps/api`        | NestJS backend (TypeScript)            |
+| `packages/seed`   | Synthetic data seed scripts            |
+| `packages/config` | Shared tooling configuration           |
+| `scripts/`        | CI and utility scripts                 |
+| `infra/`          | Docker Compose and Terraform           |
+| `docs/`           | Documentation and ADRs                 |
+| `.github/`        | CI workflows and GitHub templates      |
+| `.env.example`    | Environment variable reference         |
+| `Makefile`        | Common command shortcuts (`make help`) |
