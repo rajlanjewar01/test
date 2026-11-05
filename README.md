@@ -35,6 +35,12 @@ Run the same checks locally with `npm run check`, and `npm run test:coverage` fo
 Check new-code coverage locally after a coverage run with
 `node scripts/new-code-coverage.mjs --base develop`.
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for branch names, the merge strategy, promotion and hotfix
+steps. Check your branch name with `npm run check:branch`. Repository settings and branch
+protection are applied with `npm run github:settings -- --dry-run`.
+
 ## Layout
 
 | Path              | Purpose                                |

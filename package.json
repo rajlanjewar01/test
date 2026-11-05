@@ -20,7 +20,9 @@
 		"lint:openapi": "spectral lint apps/api/openapi/openapi.yaml --ruleset .spectral.yaml --fail-severity error",
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
-		"check": "npm run lint && npm run lint:openapi && npm run format:check && npm test"
+		"check": "npm run lint && npm run lint:openapi && npm run format:check && npm test",
+		"check:branch": "node scripts/check-branch-name.mjs --head \"$(git branch --show-current)\"",
+		"github:settings": "node scripts/apply-github-settings.mjs"
 	},
 	"devDependencies": {
 		"@bigdaddy/config": "*",

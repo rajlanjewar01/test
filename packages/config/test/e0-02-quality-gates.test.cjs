@@ -41,24 +41,24 @@ const lintSample = (filename, code) => {
 	return report.messages.map((message) => message.ruleId);
 };
 
-describe('E0-02 lint, format and commit gates', function () {
+describe('lint, format and commit gates', function () {
 	this.timeout(120000);
 
 	describe('ESLint', () => {
-		it('E0-02 AC1 passes on all workspaces with zero warnings', () => {
+		it('passes on all workspaces with zero warnings', () => {
 			const result = run(['eslint', '.', '--max-warnings', '0']);
 			expect(result.status, result.stdout + result.stderr).to.equal(0);
 		});
 
-		it('E0-02 AC1 uses the shared ESLint config from @bigdaddy/config', () => {
+		it('uses the shared ESLint config from @bigdaddy/config', () => {
 			expect(readText('eslint.config.mjs')).to.include('@bigdaddy/config/eslint.base.mjs');
 		});
 
-		it('E0-02 AC1 accepts clean code', () => {
+		it('accepts clean code', () => {
 			expect(lintSample('apps/web/src/sample.js', 'export const answer = 42;\n')).to.deep.equal([]);
 		});
 
-		it('E0-02 AC1 flags var and loose equality', () => {
+		it('flags var and loose equality', () => {
 			const rules = lintSample(
 				'apps/web/src/sample.js',
 				'var a = 1;\nif (a == 1) {\n  a = 2;\n}\n',
@@ -67,7 +67,7 @@ describe('E0-02 lint, format and commit gates', function () {
 			expect(rules).to.include('eqeqeq');
 		});
 
-		it('E0-02 AC1 flags an import the workspace does not declare', () => {
+		it('flags an import the workspace does not declare', () => {
 			const rules = lintSample(
 				'apps/web/src/sample.js',
 				"import typescript from 'typescript';\nexport default typescript;\n",
@@ -77,12 +77,12 @@ describe('E0-02 lint, format and commit gates', function () {
 	});
 
 	describe('Prettier', () => {
-		it('E0-02 AC2 check passes on all workspaces', () => {
+		it('check passes on all workspaces', () => {
 			const result = run(['prettier', '--check', '.']);
 			expect(result.status, result.stdout + result.stderr).to.equal(0);
 		});
 
-		it('E0-02 AC2 formats with the shared Prettier config', () => {
+		it('formats with the shared Prettier config', () => {
 			expect(readText('prettier.config.mjs')).to.include('@bigdaddy/config/prettier.base.mjs');
 			const result = run(
 				['prettier', '--stdin-filepath', 'apps/web/src/sample.js'],
@@ -93,40 +93,40 @@ describe('E0-02 lint, format and commit gates', function () {
 	});
 
 	describe('commitlint', () => {
-		it('E0-02 AC3 rejects a message that is not a Conventional Commit', () => {
+		it('rejects a message that is not a Conventional Commit', () => {
 			const result = run(['commitlint'], 'added some stuff');
 			expect(result.status, result.stdout + result.stderr).to.not.equal(0);
 		});
 
-		it('E0-02 AC3 rejects an unknown type', () => {
+		it('rejects an unknown type', () => {
 			const result = run(['commitlint'], 'feature: add health endpoint');
 			expect(result.status).to.not.equal(0);
 		});
 
-		it('E0-02 AC3 accepts a Conventional Commit', () => {
+		it('accepts a Conventional Commit', () => {
 			const result = run(['commitlint'], 'feat(api): add health endpoint');
 			expect(result.status, result.stdout + result.stderr).to.equal(0);
 		});
 
-		it('E0-02 AC3 uses the shared commitlint config from @bigdaddy/config', () => {
+		it('uses the shared commitlint config from @bigdaddy/config', () => {
 			expect(readText('commitlint.config.mjs')).to.include('@bigdaddy/config/commitlint.base.mjs');
 		});
 	});
 
 	describe('Husky and lint-staged', () => {
-		it('E0-02 AC4 installs the hooks through the prepare script', () => {
+		it('installs the hooks through the prepare script', () => {
 			expect(readJson('package.json').scripts.prepare).to.equal('husky');
 		});
 
-		it('E0-02 AC4 runs lint-staged on pre-commit', () => {
+		it('runs lint-staged on pre-commit', () => {
 			expect(readText('.husky/pre-commit')).to.include('lint-staged');
 		});
 
-		it('E0-02 AC4 runs commitlint on commit-msg', () => {
+		it('runs commitlint on commit-msg', () => {
 			expect(readText('.husky/commit-msg')).to.include('commitlint --edit');
 		});
 
-		it('E0-02 AC4 lint-staged runs ESLint and Prettier on staged code', async () => {
+		it('lint-staged runs ESLint and Prettier on staged code', async () => {
 			const configUrl = pathToFileURL(path.join(root, 'lint-staged.config.mjs')).href;
 			const { default: config } = await import(configUrl);
 			const commands = config['*.{js,mjs,cjs,ts}'].join(' ');
@@ -157,12 +157,12 @@ describe('E0-02 lint, format and commit gates', function () {
 				messageFile = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'bigdaddy-')), 'MSG');
 			});
 
-			it('E0-02 AC4 the commit-msg hook rejects a bad message', () => {
+			it('the commit-msg hook rejects a bad message', () => {
 				const result = runHook('added some stuff\n');
 				expect(result.status, result.stdout + result.stderr).to.not.equal(0);
 			});
 
-			it('E0-02 AC4 the commit-msg hook accepts a good message', () => {
+			it('the commit-msg hook accepts a good message', () => {
 				const result = runHook('chore(repo): add quality gates\n');
 				expect(result.status, result.stdout + result.stderr).to.equal(0);
 			});

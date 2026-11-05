@@ -82,10 +82,26 @@ jobs:
       - name: Spectral
         run: npm run lint:openapi
 
+  branch-name:
+    name: Branch name
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - name: Validate branch names
+        env:
+          HEAD_REF: ${{ github.head_ref }}
+          BASE_REF: ${{ github.base_ref }}
+        run: node scripts/check-branch-name.mjs --head "$HEAD_REF" --base "$BASE_REF"
+
   ci-passed:
     name: CI passed
     if: always()
-    needs: [quality, test, openapi]
+    needs: [quality, test, openapi, pr-title, branch-name]
     runs-on: ubuntu-latest
     steps:
       - name: Check job results

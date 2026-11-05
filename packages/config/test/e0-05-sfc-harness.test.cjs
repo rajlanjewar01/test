@@ -9,12 +9,12 @@ const root = path.resolve(__dirname, '..', '..', '..');
 const readText = (...parts) => fs.readFileSync(path.join(root, ...parts), 'utf8');
 const readJson = (...parts) => JSON.parse(readText(...parts));
 
-describe('E0-05 Vue SFC test harness', function () {
+describe('Vue SFC test harness', function () {
 	this.timeout(180000);
 
 	const webPackage = readJson('apps/web/package.json');
 
-	it('E0-05 AC1 registers the SFC loader and compiles with compiler-sfc and esbuild', () => {
+	it('registers the SFC loader and compiles with compiler-sfc and esbuild', () => {
 		expect(readText('apps/web/.mocharc.cjs')).to.include('register-vue-loader.mjs');
 		const compiler = readText('apps/web/test-support/compile-sfc.mjs');
 		expect(compiler).to.include("from 'vue/compiler-sfc'");
@@ -22,25 +22,26 @@ describe('E0-05 Vue SFC test harness', function () {
 		expect(readText('apps/web/test-support/register-vue-loader.mjs')).to.include('registerHooks');
 	});
 
-	it('E0-05 AC2 declares Vue, @vue/test-utils and jsdom for the web app', () => {
+	it('declares Vue, @vue/test-utils and jsdom for the web app', () => {
 		expect(webPackage.dependencies).to.have.property('vue');
 		expect(webPackage.devDependencies).to.have.property('@vue/test-utils');
 		expect(webPackage.devDependencies).to.have.property('jsdom');
 		expect(readText('apps/web/.mocharc.cjs')).to.include('setup-dom.mjs');
 	});
 
-	it('E0-05 AC3 declares MSW for the web app', () => {
+	it('declares MSW for the web app', () => {
 		expect(webPackage.devDependencies).to.have.property('msw');
 	});
 
-	it('E0-05 AC4 counts .vue files in the shared c8 configuration', () => {
+	it('counts .vue files in the shared c8 configuration', () => {
 		expect(readJson('packages/config/c8.base.json').extension).to.include('.vue');
 	});
 
-	it('E0-05 AC4 reports coverage for a .vue file with lines mapped back into that file', () => {
+	it('reports coverage for a .vue file with lines mapped back into that file', () => {
 		const result = spawnSync('npm', ['run', 'test:coverage', '--workspace', '@bigdaddy/web'], {
 			cwd: root,
 			encoding: 'utf8',
+			shell: true,
 		});
 		expect(result.status, result.stdout + result.stderr).to.equal(0);
 
@@ -58,7 +59,7 @@ describe('E0-05 Vue SFC test harness', function () {
 		expect(lines.some((entry) => entry.hits > 0)).to.equal(true);
 	});
 
-	it('E0-05 AC5 records the approach in an ADR with status, decision and alternatives', () => {
+	it('records the approach in an ADR with status, decision and alternatives', () => {
 		const adr = readText('docs/adr/0001-vue-sfc-testing-with-mocha.md');
 		for (const heading of [
 			'## Status',
@@ -71,7 +72,7 @@ describe('E0-05 Vue SFC test harness', function () {
 		}
 	});
 
-	it('E0-05 AC5 names the tools and the escalation rule in the ADR', () => {
+	it('names the tools and the escalation rule in the ADR', () => {
 		const adr = readText('docs/adr/0001-vue-sfc-testing-with-mocha.md');
 		expect(adr).to.include('@vue/compiler-sfc');
 		expect(adr).to.include('esbuild');
