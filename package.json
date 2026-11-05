@@ -8,7 +8,7 @@
 		"packages/*"
 	],
 	"engines": {
-		"node": ">=25",
+		"node": ">=26",
 		"npm": ">=10"
 	},
 	"scripts": {

@@ -1,4 +1,5 @@
 import { createHash } from 'node:crypto';
+import { transformSync } from 'esbuild';
 import { compileTemplate, parse, rewriteDefault } from 'vue/compiler-sfc';
 
 const DEFAULT_EXPORT_NAME = '__sfc__';
@@ -11,16 +12,13 @@ function messagesOf(errors) {
 	return errors.map((error) => String(error.message ?? error)).join('; ');
 }
 
-function buildInlineSourceMap(filename, assembled) {
-	const lines = assembled.split('\n');
-	const mappings = lines.map((_, i) => (i === 0 ? 'AAAA' : ';AACA')).join('');
-	const map = {
-		version: 3,
-		sources: [filename],
-		mappings,
-		names: [],
-	};
-	return `//# sourceMappingURL=data:application/json;base64,${Buffer.from(JSON.stringify(map)).toString('base64')}`;
+function restoreDefaultExport(code) {
+	return code
+		.replace(/var [A-Za-z_$][\w$]* = __sfc__;\n/, '')
+		.replace(
+			/export \{\n\s*[A-Za-z_$][\w$]* as default(,\n\s*\w+)*\n\};/,
+			'export default __sfc__;',
+		);
 }
 
 // Compiles a Vue single-file component (Options API, plain JavaScript) to an ES module.
@@ -57,6 +55,12 @@ export function compileSfc(source, filename) {
 	}
 
 	const assembled = `${scriptCode}\n${templateCode}\nexport default ${DEFAULT_EXPORT_NAME};\n`;
-	const code = `${assembled}${buildInlineSourceMap(filename, assembled)}\n`;
-	return { code };
+	const { code } = transformSync(assembled, {
+		loader: 'js',
+		format: 'esm',
+		sourcefile: filename,
+		sourcemap: 'inline',
+		sourcesContent: false,
+	});
+	return { code: restoreDefaultExport(code) };
 }
