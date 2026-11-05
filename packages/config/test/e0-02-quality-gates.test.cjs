@@ -27,14 +27,11 @@ const resolveBin = (name) => {
 
 const run = (args, input) => {
 	const [cmd, ...rest] = args;
-	if (isWin) {
-		return spawnSync(process.execPath, [resolveBin(cmd), ...rest], {
-			cwd: root,
-			input,
-			encoding: 'utf8',
-		});
-	}
-	return spawnSync('npx', ['--no', ...args], { cwd: root, input, encoding: 'utf8' });
+	return spawnSync(process.execPath, [resolveBin(cmd), ...rest], {
+		cwd: root,
+		input,
+		encoding: 'utf8',
+	});
 };
 
 const lintSample = (filename, code) => {
