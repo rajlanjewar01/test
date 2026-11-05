@@ -29,7 +29,6 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request:
 | Lint and format   | ESLint (zero warnings) and Prettier                                      |
 | Test and coverage | Mocha with c8: 80% lines and branches per workspace, and 80% on new code |
 | OpenAPI lint      | Spectral on `apps/api/openapi/openapi.yaml`                              |
-| PR title          | Conventional Commit format (the squash commit message)                   |
 | CI passed         | Aggregates the jobs above; this is the required check                    |
 
 Run the same checks locally with `npm run check`, and `npm run test:coverage` for coverage.

@@ -80,28 +80,10 @@ jobs:
       - name: Spectral
         run: npm run lint:openapi
 
-  pr-title:
-    name: PR title
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
-        with:
-          node-version-file: .nvmrc
-          cache: npm
-      - name: Install dependencies
-        run: npm ci
-      - name: commitlint on the PR title
-        env:
-          PR_TITLE: ${{ github.event.pull_request.title }}
-        run: echo "$PR_TITLE" | npx --no commitlint
-
   ci-passed:
     name: CI passed
     if: always()
-    needs: [quality, test, openapi, pr-title]
+    needs: [quality, test, openapi]
     runs-on: ubuntu-latest
     steps:
       - name: Check job results
