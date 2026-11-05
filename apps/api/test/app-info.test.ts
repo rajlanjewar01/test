@@ -7,4 +7,9 @@ describe('E0-01 api toolchain', () => {
 		expect(info.name).to.equal('bigdaddy-api');
 		expect(info.apiPrefix).to.equal('/api/v1');
 	});
+
+	it('E0-01 AC3 accepts a custom API prefix', () => {
+		const info = getAppInfo('/api/v2');
+		expect(info.apiPrefix).to.equal('/api/v2');
+	});
 });

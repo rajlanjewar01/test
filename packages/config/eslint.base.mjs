@@ -5,7 +5,7 @@ import importPlugin from 'eslint-plugin-import-x';
 import globals from 'globals';
 import tseslint from 'typescript-eslint';
 
-const testFiles = ['**/test/**', '**/*.test.*', '**/*.spec.*'];
+const testFiles = ['**/test/**', '**/test-support/**', '**/*.test.*', '**/*.spec.*'];
 const toolingFiles = ['**/*.config.{js,mjs,cjs}', '**/.mocharc.cjs', 'packages/config/*.{mjs,cjs}'];
 
 export default defineConfig([
