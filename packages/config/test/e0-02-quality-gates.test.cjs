@@ -142,9 +142,17 @@ describe('E0-02 lint, format and commit gates', function () {
 
 			const runHook = (message) => {
 				fs.writeFileSync(messageFile, message);
+				if (isWin) {
+					return spawnSync(process.execPath, [resolveBin('commitlint'), '--edit', messageFile], {
+						cwd: root,
+						encoding: 'utf8',
+						timeout: 30000,
+					});
+				}
 				return spawnSync('sh', ['.husky/commit-msg', messageFile], {
 					cwd: root,
 					encoding: 'utf8',
+					timeout: 30000,
 				});
 			};
 
