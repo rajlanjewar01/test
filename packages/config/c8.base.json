@@ -1,9 +1,11 @@
 {
+	"all": true,
+	"include": ["src/**"],
+	"extension": [".js", ".cjs", ".mjs", ".ts", ".vue"],
+	"exclude": ["test/**", "coverage/**", "**/*.test.*"],
+	"reporter": ["text", "lcov", "html"],
+	"reports-dir": "coverage",
 	"check-coverage": true,
 	"lines": 80,
-	"branches": 80,
-	"reporter": ["text", "html", "lcov"],
-	"report-dir": "coverage",
-	"src": ["src"],
-	"exclude": ["test/**"]
+	"branches": 80
 }
