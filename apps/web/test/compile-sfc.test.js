@@ -64,7 +64,7 @@ describe('Vue SFC compiler', () => {
 	});
 
 	it('imports .vue files as ES modules through the registered loader', async () => {
-		const module = await import('../src/components/SampleCounter.vue');
+		const module = await import('../src/components/common/SampleCounter.vue');
 		expect(module.default.name).to.equal('SampleCounter');
 		expect(module.default.render).to.be.a('function');
 	});

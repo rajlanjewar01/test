@@ -1,6 +1,6 @@
 import { mount } from '@vue/test-utils';
 import { expect } from 'chai';
-import SampleCounter from '../src/components/SampleCounter.vue';
+import SampleCounter from '../src/components/common/SampleCounter.vue';
 
 const mountCounter = (props = {}) =>
 	mount(SampleCounter, { props: { label: 'Increase', ...props } });

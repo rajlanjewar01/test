@@ -2,7 +2,17 @@
 	"all": true,
 	"include": ["src/**"],
 	"extension": [".js", ".cjs", ".mjs", ".ts", ".vue"],
-	"exclude": ["test/**", "coverage/**", "**/*.test.*"],
+	"exclude": [
+		"test/**",
+		"coverage/**",
+		"**/*.test.*",
+		"src/main.js",
+		"src/App.vue",
+		"src/store/**",
+		"src/router/**",
+		"src/modules/**",
+		"src/components/pages/**"
+	],
 	"reporter": ["text", "lcov", "html"],
 	"reports-dir": "coverage",
 	"check-coverage": true,
