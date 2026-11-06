@@ -284,6 +284,8 @@ describe('branching and PR process', function () {
 			expect(step.env.HEAD_REF).to.include('github.head_ref');
 			expect(step.env.BASE_REF).to.include('github.base_ref');
 			expect(workflow.jobs['ci-passed'].needs).to.include('branch-name');
+			expect(workflow.jobs['ci-passed'].needs).to.include('build');
+			expect(workflow.jobs['ci-passed'].needs).to.include('audit');
 		});
 	});
 

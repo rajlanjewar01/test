@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [develop, uat, main]
+    branches: [dev, uat, main]
   push:
-    branches: [develop, uat, main]
+    branches: [dev, uat, main]
   workflow_dispatch:
 
 run-name: CI
@@ -18,6 +18,7 @@ concurrency:
 
 env:
   HUSKY: 0
+  NODE_OPTIONS: '--max-old-space-size=4096'
 
 jobs:
   quality:
@@ -67,6 +68,48 @@ jobs:
           if-no-files-found: ignore
           retention-days: 7
 
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [quality, test]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build web client
+        run: npm run build --workspace=apps/web --if-present
+      - name: Build API
+        run: npm run build --workspace=apps/api --if-present
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            apps/web/dist
+            apps/api/dist
+          if-no-files-found: ignore
+          retention-days: 7
+
+  audit:
+    name: Dependency audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Audit for critical vulnerabilities
+        run: npm audit --audit-level=critical
+
   openapi:
     name: OpenAPI lint
     runs-on: ubuntu-latest
@@ -101,7 +144,7 @@ jobs:
   ci-passed:
     name: CI passed
     if: always()
-    needs: [quality, test, openapi, pr-title, branch-name]
+    needs: [quality, test, build, audit, openapi, branch-name]
     runs-on: ubuntu-latest
     steps:
       - name: Check job results

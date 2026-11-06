@@ -53,7 +53,9 @@ describe('Vue SFC test harness', function () {
 			line: Number(match[1]),
 			hits: Number(match[2]),
 		}));
-		const fileLineCount = readText('apps/web/src/components/SampleCounter.vue').split('\n').length;
+		const fileLineCount = readText('apps/web/src/components/common/SampleCounter.vue').split(
+			'\n',
+		).length;
 		expect(lines.length, 'mapped lines').to.be.greaterThan(0);
 		expect(Math.max(...lines.map((entry) => entry.line))).to.be.at.most(fileLineCount);
 		expect(lines.some((entry) => entry.hits > 0)).to.equal(true);
