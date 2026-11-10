@@ -69,21 +69,21 @@ describe('branching and PR process', function () {
 
 		it('can switch code owner review off for a solo maintainer', async () => {
 			const { buildRulesets } = await loadScript('apply-github-settings.mjs');
-			const [develop] = buildRulesets({ codeOwnerReview: false });
-			const rule = develop.rules.find((entry) => entry.type === 'pull_request');
+			const [dev] = buildRulesets({ codeOwnerReview: false });
+			const rule = dev.rules.find((entry) => entry.type === 'pull_request');
 			expect(rule.parameters.require_code_owner_review).to.equal(false);
 		});
 	});
 
 	describe('branch protection script', () => {
-		it('protects develop, uat and main with two active rulesets', async () => {
+		it('protects dev, uat and main with two active rulesets', async () => {
 			const { buildRulesets } = await loadScript('apply-github-settings.mjs');
 			const rulesets = buildRulesets();
 			expect(rulesets.map((ruleset) => ruleset.name)).to.deep.equal([
-				'protect-develop',
+				'protect-dev',
 				'protect-uat-main',
 			]);
-			expect(rulesets[0].conditions.ref_name.include).to.deep.equal(['refs/heads/develop']);
+			expect(rulesets[0].conditions.ref_name.include).to.deep.equal(['refs/heads/dev']);
 			expect(rulesets[1].conditions.ref_name.include).to.deep.equal([
 				'refs/heads/uat',
 				'refs/heads/main',
@@ -127,7 +127,7 @@ describe('branching and PR process', function () {
 			}
 		});
 
-		it('allows squash only into develop and merge commits only into uat and main', async () => {
+		it('allows squash only into dev and merge commits only into uat and main', async () => {
 			const { buildRulesets } = await loadScript('apply-github-settings.mjs');
 			const methods = buildRulesets().map(
 				(ruleset) =>
@@ -148,7 +148,7 @@ describe('branching and PR process', function () {
 		it('sets repository defaults for the branching model', async () => {
 			const { REPOSITORY_SETTINGS } = await loadScript('apply-github-settings.mjs');
 			expect(REPOSITORY_SETTINGS).to.include({
-				default_branch: 'develop',
+				default_branch: 'dev',
 				allow_squash_merge: true,
 				allow_merge_commit: true,
 				allow_rebase_merge: false,
@@ -161,7 +161,7 @@ describe('branching and PR process', function () {
 			expect(result.status, result.stderr).to.equal(0);
 			const plan = JSON.parse(result.stdout);
 			expect(plan.rulesets).to.have.lengthOf(2);
-			expect(plan.repository.default_branch).to.equal('develop');
+			expect(plan.repository.default_branch).to.equal('dev');
 			expect(plan.rulesets[0].bypass_actors).to.have.lengthOf(1);
 		});
 
@@ -214,10 +214,10 @@ describe('branching and PR process', function () {
 		it('accepts only the allowed source branches for each target branch', async () => {
 			const { validatePullRequest } = await loadScript('check-branch-name.mjs');
 			const valid = [
-				['feature/E4-02-page-sizes', 'develop'],
-				['hotfix/BD-123-login-error', 'develop'],
-				['dependabot/npm_and_yarn/mocha-12.0.0', 'develop'],
-				['develop', 'uat'],
+				['feature/E4-02-page-sizes', 'dev'],
+				['hotfix/BD-123-login-error', 'dev'],
+				['dependabot/npm_and_yarn/mocha-12.0.0', 'dev'],
+				['dev', 'uat'],
 				['hotfix/BD-123-login-error', 'uat'],
 				['uat', 'main'],
 				['hotfix/BD-123-login-error', 'main'],
@@ -228,10 +228,10 @@ describe('branching and PR process', function () {
 			const invalid = [
 				['feature/E4-02-page-sizes', 'uat'],
 				['feature/E4-02-page-sizes', 'main'],
-				['develop', 'main'],
-				['uat', 'develop'],
-				['main', 'develop'],
-				['develop', 'develop'],
+				['dev', 'main'],
+				['uat', 'dev'],
+				['main', 'dev'],
+				['dev', 'dev'],
 				['dependabot/npm_and_yarn/mocha-12.0.0', 'main'],
 				['feature/E4-02-page-sizes', 'release'],
 			];
@@ -248,12 +248,7 @@ describe('branching and PR process', function () {
 		});
 
 		it('exits non-zero on the command line for a bad name', () => {
-			const result = runScript('check-branch-name.mjs', [
-				'--head',
-				'my-branch',
-				'--base',
-				'develop',
-			]);
+			const result = runScript('check-branch-name.mjs', ['--head', 'my-branch', '--base', 'dev']);
 			expect(result.status).to.equal(1);
 			expect(result.stderr).to.include('feature/STORY-ID-name');
 		});
@@ -263,7 +258,7 @@ describe('branching and PR process', function () {
 				'--head',
 				'feature/E0-06-branching-and-pr-process',
 				'--base',
-				'develop',
+				'dev',
 			]);
 			expect(result.status, result.stderr).to.equal(0);
 			expect(result.stdout).to.include('OK');
@@ -297,17 +292,17 @@ describe('branching and PR process', function () {
 			expect(guide).to.include('hotfix/TICKET-name');
 		});
 
-		it('documents squash-merge into develop and merge commits for uat and main', () => {
-			expect(guide).to.match(/\|\s*`develop`\s*\|\s*Squash merge/);
+		it('documents squash-merge into dev and merge commits for uat and main', () => {
+			expect(guide).to.match(/\|\s*`dev`\s*\|\s*Squash merge/);
 			expect(guide).to.match(/\|\s*`uat`\s*\|\s*Merge commit/);
 			expect(guide).to.match(/\|\s*`main`\s*\|\s*Merge commit/);
 		});
 
-		it('documents the hotfix flow with back-merges into uat and develop', () => {
+		it('documents the hotfix flow with back-merges into uat and dev', () => {
 			expect(guide).to.include('## Hotfix');
 			expect(guide).to.match(/back-merge/i);
 			expect(guide).to.include('`uat`');
-			expect(guide).to.include('`develop`');
+			expect(guide).to.include('`dev`');
 		});
 
 		it('states that direct pushes are not allowed', () => {

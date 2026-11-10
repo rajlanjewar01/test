@@ -33,7 +33,7 @@ GitHub Actions (`.github/workflows/ci.yml`) runs on every pull request:
 
 Run the same checks locally with `npm run check`, and `npm run test:coverage` for coverage.
 Check new-code coverage locally after a coverage run with
-`node scripts/new-code-coverage.mjs --base develop`.
+`node scripts/new-code-coverage.mjs --base dev`.
 
 ## Contributing
 
