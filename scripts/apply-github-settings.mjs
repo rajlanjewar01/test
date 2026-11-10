@@ -11,7 +11,7 @@ import { pathToFileURL } from 'node:url';
 export const REQUIRED_CHECK = 'CI passed';
 
 export const REPOSITORY_SETTINGS = {
-	default_branch: 'develop',
+	default_branch: 'dev',
 	allow_squash_merge: true,
 	allow_merge_commit: true,
 	allow_rebase_merge: false,
@@ -85,8 +85,8 @@ export function buildRulesets(options = {}) {
 	return [
 		buildRuleset({
 			...options,
-			name: 'protect-develop',
-			branches: ['develop'],
+			name: 'protect-dev',
+			branches: ['dev'],
 			mergeMethod: 'squash',
 		}),
 		buildRuleset({
@@ -98,11 +98,19 @@ export function buildRulesets(options = {}) {
 	];
 }
 
+// Rulesets from earlier versions of this script, removed on every run.
+export const LEGACY_RULESET_NAMES = ['protect-develop'];
+
+export function findLegacyRulesets(existing, legacyNames = LEGACY_RULESET_NAMES) {
+	return existing.filter((entry) => legacyNames.includes(entry.name));
+}
+
 export function buildPlan(options = {}) {
 	return {
 		repository: REPOSITORY_SETTINGS,
 		workflowPermissions: WORKFLOW_PERMISSIONS,
 		rulesets: buildRulesets(options),
+		legacyRulesets: LEGACY_RULESET_NAMES,
 	};
 }
 
@@ -150,6 +158,18 @@ function upsertRuleset(repo, ruleset) {
 	}
 	gh(['-X', 'POST', `repos/${repo}/rulesets`], ruleset);
 	return 'created';
+}
+
+function removeLegacyRuleset(repo, name) {
+	const existing = JSON.parse(gh([`repos/${repo}/rulesets`]));
+	const legacy = findLegacyRulesets(existing, [name]);
+	if (legacy.length === 0) {
+		return 'not present';
+	}
+	for (const entry of legacy) {
+		gh(['-X', 'DELETE', `repos/${repo}/rulesets/${entry.id}`]);
+	}
+	return 'deleted';
 }
 
 function runStep(label, action) {
@@ -200,6 +220,9 @@ function main() {
 		}),
 		...plan.rulesets.map((ruleset) =>
 			runStep(`ruleset ${ruleset.name}`, () => upsertRuleset(repo, ruleset)),
+		),
+		...plan.legacyRulesets.map((name) =>
+			runStep(`legacy ruleset ${name}`, () => removeLegacyRuleset(repo, name)),
 		),
 	];
 	process.exitCode = results.every(Boolean) ? 0 : 1;

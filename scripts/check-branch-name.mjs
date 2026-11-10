@@ -7,11 +7,11 @@ import { pathToFileURL } from 'node:url';
 const FEATURE = /^feature\/E\d+-\d{2,}-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const HOTFIX = /^hotfix\/[A-Z][A-Z0-9]*-\d+-[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const DEPENDABOT = /^dependabot\/[A-Za-z0-9._/-]+$/;
-const PERMANENT_BRANCHES = ['develop', 'uat', 'main'];
+const PERMANENT_BRANCHES = ['dev', 'uat', 'main'];
 
 const ALLOWED_SOURCES = {
-	develop: ['feature', 'hotfix', 'dependabot'],
-	uat: ['develop', 'hotfix'],
+	dev: ['feature', 'hotfix', 'dependabot'],
+	uat: ['dev', 'hotfix'],
 	main: ['uat', 'hotfix'],
 };
 
@@ -60,7 +60,7 @@ export function validatePullRequest(head, base) {
 		return {
 			valid: false,
 			kind: named.kind,
-			reason: `Pull requests into "${base}" are not supported. Use develop, uat or main.`,
+			reason: `Pull requests into "${base}" are not supported. Use dev, uat or main.`,
 		};
 	}
 	if (!allowed.includes(named.kind)) {

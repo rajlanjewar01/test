@@ -2,41 +2,41 @@
 
 ## Branches
 
-| Branch                  | Purpose                                                        | Created from | Merged into                      |
-| ----------------------- | -------------------------------------------------------------- | ------------ | -------------------------------- |
-| `feature/STORY-ID-name` | One story, for example `feature/E4-02-page-sizes`              | `develop`    | `develop`                        |
-| `hotfix/TICKET-name`    | Urgent production fix, for example `hotfix/BD-123-login-error` | `main`       | `main`, then `uat` and `develop` |
-| `develop`               | Integration branch (default)                                   | n/a          | `uat`                            |
-| `uat`                   | Acceptance testing                                             | `develop`    | `main`                           |
-| `main`                  | Production                                                     | `uat`        | n/a                              |
+| Branch                  | Purpose                                                        | Created from | Merged into                  |
+| ----------------------- | -------------------------------------------------------------- | ------------ | ---------------------------- |
+| `feature/STORY-ID-name` | One story, for example `feature/E4-02-page-sizes`              | `dev`        | `dev`                        |
+| `hotfix/TICKET-name`    | Urgent production fix, for example `hotfix/BD-123-login-error` | `main`       | `main`, then `uat` and `dev` |
+| `dev`                   | Integration branch (default)                                   | n/a          | `uat`                        |
+| `uat`                   | Acceptance testing                                             | `dev`        | `main`                       |
+| `main`                  | Production                                                     | `uat`        | n/a                          |
 
 Names are lowercase kebab-case after the ID. CI rejects other names.
 
 ## Merge strategy
 
-| Into      | Method       | Why                                 |
-| --------- | ------------ | ----------------------------------- |
-| `develop` | Squash merge | One conventional commit per story   |
-| `uat`     | Merge commit | Keeps the history of each promotion |
-| `main`    | Merge commit | Keeps the history of each release   |
+| Into   | Method       | Why                                 |
+| ------ | ------------ | ----------------------------------- |
+| `dev`  | Squash merge | One conventional commit per story   |
+| `uat`  | Merge commit | Keeps the history of each promotion |
+| `main` | Merge commit | Keeps the history of each release   |
 
-Rebase merging is disabled. Direct pushes to `develop`, `uat` and `main` are not allowed:
+Rebase merging is disabled. Direct pushes to `dev`, `uat` and `main` are not allowed:
 every change goes through a pull request with review and the required **CI passed** check.
 
 ## Day to day
 
-1. `git switch develop && git pull`
+1. `git switch dev && git pull`
 2. `git switch -c feature/E4-02-page-sizes`
 3. Commit with Conventional Commits, for example `feat(api): add page size validation`.
 4. `npm run check` before you push.
-5. Open a PR into `develop`. The PR title must be a Conventional Commit because it becomes the
+5. Open a PR into `dev`. The PR title must be a Conventional Commit because it becomes the
    squash commit message. Fill in the PR template.
 6. After approval and a green **CI passed**, squash-merge. The branch is deleted automatically.
 
 ## Promotion
 
-- `develop` to `uat`: open a PR with head `develop` and base `uat`, titled
-  `chore(release): promote develop to uat`. Merge with a merge commit.
+- `dev` to `uat`: open a PR with head `dev` and base `uat`, titled
+  `chore(release): promote dev to uat`. Merge with a merge commit.
 - `uat` to `main`: open a PR with head `uat` and base `main`, titled
   `chore(release): promote uat to main`. Merge with a merge commit.
 
@@ -45,9 +45,9 @@ every change goes through a pull request with review and the required **CI passe
 1. `git switch main && git pull && git switch -c hotfix/BD-123-login-error`
 2. Fix it, with a test, and open a PR into `main`. Merge with a merge commit after review.
 3. Back-merge: open PRs from the same hotfix branch into `uat` (merge commit) and into
-   `develop` (squash). GitHub deletes the head branch after the first merge, so use
+   `dev` (squash). GitHub deletes the head branch after the first merge, so use
    **Restore branch** on the merged PR to open the back-merge PRs.
-4. Do not leave `uat` or `develop` without the fix: a hotfix is finished only after both
+4. Do not leave `uat` or `dev` without the fix: a hotfix is finished only after both
    back-merges are merged.
 
 ## Reviews
